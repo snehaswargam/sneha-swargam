@@ -19,5 +19,4 @@
 
 📊 What I’m Currently Up To:
 - 🚀 Enhancing my skills in Data Science and System Design.
-- ✍️ Writing technical blogs to share knowledge.
 - 💡 Building exciting projects on Python and Cloud platforms.
