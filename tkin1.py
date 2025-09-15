@@ -67,17 +67,18 @@ def parse_xml():
             param_label = p_def.text.split("/")[-1] if p_def is not None else "UnknownDef"
             param_value = p_val.text if p_val is not None else ""
             # store reference to the XML element so we can update it later
-            treeview.insert(parent_id, "end", text=param_label, values=(param_value,), tags=("editable",))
+            param_id=treeview.insert(parent_id, "end", text=param_label, values=(param_value,), tags=("editable",))
             treeview.set(parent_id, "Value", "")  # parent container has no direct value
+            item_to_xml[param_id] = p_val
         for param in container.findall(".//a:Test-TEXTUAL-PARAM-VALUE", ns):
             p_def = param.find("a:DEFINITION-REF", ns)
             p_val = param.find("a:VALUE", ns)
             param_label = p_def.text.split("/")[-1] if p_def is not None else "UnknownDef"
             param_value = p_val.text if p_val is not None else ""
             # store reference to the XML element so we can update it later
-            treeview.insert(parent_id, "end", text=param_label, values=(param_value,), tags=("editable",))
+            param_id=treeview.insert(parent_id, "end", text=param_label, values=(param_value,), tags=("editable",))
             treeview.set(parent_id, "Value", "")  # parent container has no direct value
-
+            item_to_xml[param_id] = p_val
 def edit_value(event):
     selected_item = treeview.focus()
     if not selected_item:
@@ -86,6 +87,7 @@ def edit_value(event):
     new_value = simpledialog.askstring("Edit Value", "Enter new value:", initialvalue=old_value)
     if new_value is not None:
         treeview.item(selected_item, values=(old_value,new_value))
+        
         xml_elem = item_to_xml[selected_item]
         xml_elem.text = new_value
 
@@ -96,6 +98,7 @@ def save_file():
         if save_path:
             et.register_namespace('', "http://autosar.org/schema/r4.0")
             tree.write(save_path, encoding="utf-8", xml_declaration=True, short_empty_elements=True)
+            exit()
 tk.Button(root, text="Save", command=save_file).grid(row=0, column=3, padx=10, pady=10)
 
 treeview.bind("<Double-1>", edit_value)
